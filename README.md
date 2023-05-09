@@ -95,3 +95,6 @@ brew install cheat
 
 ## 🎁 Bonus : un script d’installation
 
+```shell
+zsh -c "$(curl -s hhttps://raw.githubusercontent.com/Aiola13/zsh-profile/main/macos_install_utils.zsh)"
+```
