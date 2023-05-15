@@ -46,7 +46,7 @@
 ### Powerlevel10k
 ```shell
 brew install romkatv/powerlevel10k/powerlevel10k
-echo "source $(brew --prefix)/opt/powerlevel10k/powerlevel10k.zsh-theme" >>~/.zshrc
+echo "source $(brew --prefix)/opt/powerlevel10k/powerlevel10k.zsh-theme" >> ~/.zshrc
 ```
 ### zsh-autosuggestions
 ```shell
@@ -98,5 +98,5 @@ brew install cheat
 ## 🎁 Bonus : un script d’installation
 
 ```shell
-zsh -c "$(curl -s hhttps://raw.githubusercontent.com/Aiola13/zsh-profile/main/macos_install_utils.zsh)"
+zsh -c "$(curl -s https://raw.githubusercontent.com/Aiola13/zsh-profile/main/macos_install_utils.zsh)"
 ```
