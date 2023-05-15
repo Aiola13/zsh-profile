@@ -2,14 +2,16 @@
   <a href="#"><img src="https://readme-typing-svg.herokuapp.com?center=true&vCenter=true&lines=My+ZSH+terminal;"></a>
 </p>
 <p align="center">
-    Update : 2023-05-09<br />
+    Update : 2023-05-16<br />
 </p>
 <p align="center">
     <a href="#"><img src="https://img.shields.io/badge/zsh-%23CDCDCE.svg?style=for-the-badge&logo=gnubash&logoColor=1B1B1F"> </a>
     <a href="#"><img src="https://img.shields.io/badge/macos-%23000000.svg?style=for-the-badge&logo=apple&logoColor=white"> </a>
+    <a href="#"><img src="https://img.shields.io/badge/Burger%20King-D62300?logo=burgerking&logoColor=fff&style=flat-square" alt="Burger King Badge"></a>
+    <a href="#"><img src="https://img.shields.io/badge/Lada-ED6B21?logo=lada&logoColor=fff&style=flat-square" alt="Lada Badge"></a>
     <br />
+    <img src="./neofetch.png" >
 </p> 
-
 
 ## ⚡️ Informations
 **Operating System :** MacOS Ventura
