@@ -20,6 +20,8 @@
 
 **Text Editor :** [VSCode](https://code.visualstudio.com)
 
+**Icons :** [MesloLGS NF](https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k)
+
 ## 📦️ Packages
 ### 🐚 Shell
  - [zsh](https://www.zsh.org/) : More intuitive than bash
