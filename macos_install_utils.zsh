@@ -1,18 +1,25 @@
 #!/bin/zsh
-
-# To execute run:
 #
-#    zsh macos_install_utils.sh
+# macOS setup script for the Aiola zsh profile.
+#
+# It installs Homebrew, the CLI tools, Oh My Zsh, Powerlevel10k and the zsh
+# plugins, then drops the .zshrc / .p10k.zsh from this repo into your home.
+#
+# To run:
+#
+#    zsh macos_install_utils.zsh        # normal
+#    zsh macos_install_utils.zsh -v     # verbose (set -x)
 
+set -e
 
-# Activer le mode verbose si l'option -v est fournie
+# Enable verbose mode if -v is passed.
 verbose_mode() {
-  if [ "$1" == "-v" ]; then
+  if [ "$1" = "-v" ]; then
     set -x
   fi
 }
 
-# Vérifier si le script est exécuté en tant que root et définir USER_HOME en conséquence
+# Resolve the home directory (handles being run as root).
 set_user_home() {
   if [ "$(id -u)" -eq 0 ]; then
     USER_HOME="/root"
@@ -21,98 +28,116 @@ set_user_home() {
   fi
 }
 
-# Installer Homebrew (gestionnaire de paquets pour macOS) s'il n'est pas déjà installé
+# Directory holding this script, so config files are copied from the repo.
+set_script_dir() {
+  SCRIPT_DIR="${0:A:h}"
+}
+
+# Install Homebrew if it is not already present.
 install_homebrew() {
   if ! command -v brew >/dev/null 2>&1; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+  # Make brew available in this shell (Apple Silicon and Intel paths).
+  if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
 }
 
-# Installer les paquets et les ajouter à la configuration Zsh
+# Install the Homebrew packages.
 install_packages() {
   echo "Installing packages..."
   packages=(
-    "zsh"
-    "romkatv/powerlevel10k/powerlevel10k"
+    "fastfetch"
     "bat"
-    "exa"
+    "eza"
     "btop"
     "ncdu"
     "duf"
     "fd"
     "cheat"
   )
-  sources=(
-    "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
-    "/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-    "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-  )
-  plugins=(
-    "zsh-autosuggestions:https://github.com/zsh-users/zsh-autosuggestions"
-    "zsh-syntax-highlighting:https://github.com/zsh-users/zsh-syntax-highlighting.git"
-  )
 
   brew update
 
   for package in "${packages[@]}"; do
-    echo "... ${package} ... "
+    echo "... ${package} ..."
     brew list "${package}" >/dev/null 2>&1 || brew install "${package}"
   done
 
+  echo "✅ packages done"
+}
+
+# Install Oh My Zsh (unattended so it doesn't replace our .zshrc or launch zsh).
+install_oh_my_zsh() {
+  if [ ! -d "${USER_HOME}/.oh-my-zsh" ]; then
+    echo "Installing Oh My Zsh..."
+    RUNZSH=no KEEP_ZSHRC=yes \
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  fi
+}
+
+# Install Powerlevel10k and the external plugins as Oh My Zsh custom add-ons.
+install_omz_addons() {
+  echo "Installing Powerlevel10k and plugins..."
+  local custom="${ZSH_CUSTOM:-${USER_HOME}/.oh-my-zsh/custom}"
+
+  # name:repo pairs cloned into $custom/themes or $custom/plugins.
+  themes=(
+    "powerlevel10k:https://github.com/romkatv/powerlevel10k.git"
+  )
+  plugins=(
+    "zsh-autosuggestions:https://github.com/zsh-users/zsh-autosuggestions.git"
+    "zsh-syntax-highlighting:https://github.com/zsh-users/zsh-syntax-highlighting.git"
+  )
+
+  for theme in "${themes[@]}"; do
+    local name="${theme%%:*}" repo="${theme#*:}"
+    local dir="${custom}/themes/${name}"
+    [ -d "${dir}" ] || git clone --depth=1 "${repo}" "${dir}"
+  done
+
   for plugin in "${plugins[@]}"; do
-    plugin_name="${plugin%%:*}"
-    plugin_git_repo="${plugin#*:}"
-    plugin_dir="${USER_HOME}/.zsh/${plugin_name}"
-
-    if [ ! -d "${plugin_dir}" ]; then
-        git clone "${plugin_git_repo}" "${plugin_dir}"
-    fi
+    local name="${plugin%%:*}" repo="${plugin#*:}"
+    local dir="${custom}/plugins/${name}"
+    [ -d "${dir}" ] || git clone --depth=1 "${repo}" "${dir}"
   done
 
-  for source in "${sources[@]}"; do
-    if [ -f "${source}" ] && ! grep -q "source ${source}" "${USER_HOME}/.zshrc"; then
-      echo "source ${source}" >> "${USER_HOME}/.zshrc"
-    fi
-  done
-
-  echo "✅ done"
+  echo "Oh My Zsh add-ons done"
 }
 
-# Appliquer les modifications en rechargeant la configuration Zsh
-apply_changes() {
-  echo "Applying changes..."
-  source "${USER_HOME}/.zshrc"
-}
-
-# Copier les fichiers de configuration vers le répertoire utilisateur
+# Copy the repo's config files into the home directory (backing up existing ones).
+# When the script is run standalone (e.g. piped from curl) the files are not
+# present next to it, so they are downloaded from the repository instead.
 copy_config_files() {
   echo "Copying configuration files..."
+  local raw_base="https://raw.githubusercontent.com/Aiola13/zsh-profile/main"
 
-  zshrc_src_path="./.zshrc"
-  p10k_src_path="./.p10k.zsh"
-  zshrc_dest_path="${USER_HOME}/.zshrc"
-  p10k_dest_path="${USER_HOME}/.p10k.zsh"
-   
-  if [ -f "${zshrc_src_path}" ]; then
-    cp "${zshrc_src_path}" "${zshrc_dest_path}"
-  fi
-
-  if [ -f "${p10k_src_path}" ]; then
-    cp "${p10k_src_path}" "${p10k_dest_path}"
-  fi
+  for file in ".zshrc" ".p10k.zsh"; do
+    local src="${SCRIPT_DIR}/${file}"
+    local dest="${USER_HOME}/${file}"
+    [ -f "${dest}" ] && cp "${dest}" "${dest}.bak"
+    if [ -f "${src}" ]; then
+      cp "${src}" "${dest}"
+    else
+      curl -fsSL "${raw_base}/${file}" -o "${dest}"
+    fi
+  done
 }
 
-# La fonction principale qui appelle les autres fonctions pour installer et configurer les éléments requis
 main() {
   verbose_mode "$1"
   set_user_home
+  set_script_dir
   install_homebrew
   install_packages
+  install_oh_my_zsh
+  install_omz_addons
   copy_config_files
-  apply_changes
-  echo "✅ Installation complete!"
+  echo "Installation complete! Restart your terminal or run: exec zsh"
 }
 
-# Appeler la fonction principale avec tous les arguments passés au script
 main "$@"
