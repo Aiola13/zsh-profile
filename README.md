@@ -10,10 +10,10 @@
     <a href="#"><img src="https://img.shields.io/badge/Burger%20King-D62300?logo=burgerking&logoColor=fff&style=flat-square" alt="Burger King Badge"></a>
     <a href="#"><img src="https://img.shields.io/badge/Lada-ED6B21?logo=lada&logoColor=fff&style=flat-square" alt="Lada Badge"></a>
     <br />
-    <img src="./neofetch.png" >
+    <img src="./fastfetch.png" >
 </p> 
 
-## ⚡️ Informations
+## Informations
 **Operating System :** macOS
 
 **Terminal Client :** [Tabby](https://tabby.sh/)
@@ -22,11 +22,11 @@
 
 **Icons :** [MesloLGS NF](https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k)
 
-## 📦️ Packages
-### 🐚 Shell
+## Packages
+### Shell
  - [zsh](https://www.zsh.org/) : More intuitive than bash
 
-### 🥡 Commands
+### Commands
  - [bat](https://github.com/sharkdp/bat) : Better `cat`
  - [btop](https://github.com/aristocratos/btop) : Better `htop`
  - [cheat](https://github.com/cheat/cheat) : Better `man`, all your cheatsheets in your terminal
@@ -36,20 +36,20 @@
  - [fd](https://github.com/sharkdp/fd) : Better `find`
  - [ncdu](https://dev.yorhel.nl/ncdu) : Display your storage simply and graphically
 
-### 🌮 Theme + Frameworks
+### Theme + Frameworks
  - [oh-my-zsh](https://ohmyz.sh/) : Framework for managing your zsh configuration
  - [powerlevel10k](https://github.com/romkatv/powerlevel10k) : Customize your command prompt to perfection
 
-### ⚒️ Tools
+### Tools
  - [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) : Like fish, fish-like autosuggestions
  - [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) : Like fish too, command syntax highlighting
 
-### 🔌 Oh My Zsh plugins
+### Oh My Zsh plugins
 `git` · `docker` · `docker-compose` · `sudo` · `history` · `colored-man-pages` · `extract` · `web-search` · `zsh-autosuggestions` · `zsh-syntax-highlighting`
 
-## ⚙️ Install for macOS
+## Install for macOS
 
-### 🎁 One-liner (recommended)
+### One-liner (recommended)
 The install script handles everything: Homebrew, the CLI tools, Oh My Zsh,
 Powerlevel10k, the plugins, and copies the config files into your home.
 
@@ -68,7 +68,7 @@ zsh macos_install_utils.zsh
 
 </details>
 
-### 🔧 Manual install
+### Manual install
 
 #### Homebrew packages
 ```shell
